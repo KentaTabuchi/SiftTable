@@ -9,7 +9,7 @@ Public adoRs As Object 'レコードセット
 
 'アクセスデータに接続
 Public Sub DBConnect()
-dbpath = ThisWorkbook.Path & "\シフト表.accdb"
+dbpath = ThisWorkbook.Path & "\staff_info.accdb"
 Set adoCn = CreateObject("adodb.connection")
 adoCn.Open "Provider=microsoft.ace.oledb.12.0;data source=" & dbpath & ";"
 End Sub
