@@ -66,8 +66,6 @@ Public Sub WriteBasicShift(スタッフ As Staff)
         Dim i As Integer
         For i = 列.月初 To 列.最終列
             currentDay = DateValue(Cells(行.日付行, i).Value)
-            ProgressForm.SubInfoLabel.Caption = "Scanning....   " & currentDay
-            DoEvents
                 Select Case Weekday(currentDay)
                 Case vbSunday
                     Cells(スタッフ.row, i).Value = 日曜日.出勤時間
@@ -107,8 +105,6 @@ Public Sub CopyFromPreviousMonth(スタッフ As Staff)
         targetDay = Cells(行.日付行, i)
         Dim card As TimeCard
         For Each card In スタッフ.前月シフト
-            ProgressForm.SubInfoLabel.Caption = "Scanning....   " & card.日付
-            DoEvents
         If card.日付 = targetDay Then
             Cells(スタッフ.row, i).Value = card.出勤時間
             Cells(スタッフ.row + 1, i).Value = card.退勤時間

@@ -27,8 +27,6 @@ Public Sub paintImpossibleDay(スタッフ As Staff)
     Else
         For i = 列.開始日 To 列.最終日
             currentDay = DateValue(Cells(行.日付, i).Value)
-            ProgressForm.SubInfoLabel.Caption = "Scanning....   " & currentDay
-            DoEvents
             Dim 出勤不可日 As Variant
                 For Each 出勤不可日 In スタッフ.出勤不可日リスト
                     If currentDay = 出勤不可日 Then

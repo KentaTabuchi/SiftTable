@@ -19,6 +19,7 @@ Private Enum 列
     開始日 = 3
     最終日 = 39
     労働時間列 = 40
+    週休予定列 = 42
 End Enum
 'テーブルの罫線を引き直すメソッド
 '①まず従業員のシフト欄に罫線を引く　外枠＝細実線　中横線＝破線
@@ -36,7 +37,7 @@ Public Sub ruleLine()
     For Each スタッフ In TableManager.スタッフリスト
         Call WorkSheetRuler.ruleLineToStaffPane(スタッフ) '①
         Call WorkSheetRuler.ruleLineToNamePane(スタッフ) '②
-        Call WorkSheetRuler.ruleLineToWorkTimePane(スタッフ) '②
+        Call WorkSheetRuler.ruleLineToWorkTimePane(スタッフ) '⑥
     Next
     Call WorkSheetRuler.ruleLineToSchedulePane(TableManager.会議等) '③
     Call WorkSheetRuler.ruleLineToSchedulePane(TableManager.祝日)
@@ -48,6 +49,7 @@ End Sub
 '罫線を全部消すメソッド
 '１マス余分に消さないと次にVBAで罫線を引こうとすると表の端のあたりで謎のエラーが起きるので多めに消している。
 'ゴミデータによるエクセルのバグのようだ
+'どうやらゴミデータでなくセル結合に問題があるようだが一応このままにしておく
 Private Sub clearAllLine()
     Dim 対象セル As Range
         Set 対象セル = Range(Cells(行.表上端 - 1, 列.名前列 - 1), Cells(行.表下端 + 2, 列.労働時間列 + 2))
@@ -56,14 +58,16 @@ Private Sub clearAllLine()
         End With
     Application.ScreenUpdating = True
 End Sub
+'労働時間列から週休列まで罫線を引く
 Private Sub ruleLineToWorkTimePane(スタッフ As Staff)
     Application.ScreenUpdating = False
     Dim 対象セル As Range
-        Set 対象セル = Range(Cells(スタッフ.row, 列.労働時間列), Cells(スタッフ.row + 1, 列.労働時間列))
+        Set 対象セル = Range(Cells(スタッフ.row, 列.労働時間列), Cells(スタッフ.row + 1, 列.週休予定列))
         With 対象セル
             .Borders(xlEdgeTop).LineStyle = xlContinuous
             .Borders(xlInsideHorizontal).LineStyle = xlDash
             .Borders(xlEdgeLeft).Weight = xlMedium
+            .Borders(xlInsideVertical).LineStyle = xlContinuous
         End With
     Application.ScreenUpdating = True
 End Sub
@@ -88,15 +92,27 @@ Private Sub ruleLineToDatePane()
     Application.ScreenUpdating = True
 End Sub
 '表のいちばん外側の枠に二重線を引く
+'表の下端は名前列が結合されているため、そのまま指定すると1004実行時エラー（Null Pointer Exception)になってしまう
+'そのため処理を分けて一つ下の行から上辺に引く
 Private Sub ruleLineToAroundTable()
     Dim 対象セル As Range
-        Set 対象セル = Range(Cells(行.表上端, 列.名前列), Cells(行.表下端, 列.労働時間列))
+    
+        Set 対象セル = Range(Cells(行.表上端, 列.名前列), Cells(行.表下端, 列.週休予定列))
         With 対象セル
-            .Borders(xlEdgeTop).LineStyle = xlDouble '上下左右に二重線を引く
+            .Borders(xlEdgeTop).LineStyle = xlDouble
             .Borders(xlEdgeLeft).LineStyle = xlDouble
-            '.Borders(xlEdgeBottom).LineStyle = xlDouble  '←本来こう書きたいが何故か書式設定できないので下の列から上辺に描いている↓
-            '.Borders(xlEdgeRight).LineStyle = xlDouble
         End With
+        
+        Set 対象セル = Range(Cells(行.表下端 + 1, 列.名前列), Cells(行.表下端 + 1, 列.週休予定列))
+        With 対象セル
+            .Borders(xlEdgeTop).LineStyle = xlDouble
+        End With
+        
+        Set 対象セル = Range(Cells(行.表上端, 列.週休予定列), Cells(行.表下端, 列.週休予定列))
+        With 対象セル
+            .Borders(xlEdgeRight).LineStyle = xlDouble
+        End With
+    
     Application.ScreenUpdating = True
 End Sub
 '引数で受け取ったスタッフのシフト欄に罫線を引く
