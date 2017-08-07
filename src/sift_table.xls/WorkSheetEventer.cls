@@ -34,5 +34,5 @@ End Sub
 'スタッフクラスなどの初期化を行っている｡はじめにこれを動かさないとほとんどのクラスがNULLpointerExceptionになる
 Private Sub preparedApplication()
     On Error Resume Next
-    TableManager.setTablePosition
+    TableManager.initialize
 End Sub

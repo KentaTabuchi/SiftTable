@@ -32,7 +32,7 @@ End Enum
 '最後に表の外枠＝二重線 '⑦
 Public Sub ruleLine()
     Call clearAllLine
-    TableManager.setTablePosition
+    TableManager.initialize
     Dim スタッフ As Staff
     For Each スタッフ In TableManager.スタッフリスト
         Call WorkSheetRuler.ruleLineToStaffPane(スタッフ) '①

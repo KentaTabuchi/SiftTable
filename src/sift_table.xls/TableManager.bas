@@ -1,6 +1,8 @@
 Attribute VB_Name = "TableManager"
 Option Explicit
-
+'////////////////////////////////////////////////////////////////////////////////////////////
+'
+'////////////////////////////////////////////////////////////////////////////////////////////
 Enum 行  'シートの行番号に名前をつける
     祝日行 = 6
     予定行 = 8
@@ -25,8 +27,8 @@ End Enum
 Public スタッフリスト As Collection
 Public 祝日 As Schedule
 Public 会議等 As Schedule
-
-Public Sub setTablePosition()
+'コンストラクタ。このモジュールのメンバにアクセスする時、まずこのメソッドを呼び出さないとNullPointerExceptionになる。
+Public Sub initialize()
     Set スタッフリスト = New Collection
     Dim i As Integer
     For i = 0 To 15

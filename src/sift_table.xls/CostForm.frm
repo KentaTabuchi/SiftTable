@@ -21,7 +21,7 @@ Option Explicit
 
 Private Sub UserForm_Initialize()
     Me.ListBox_StaffCost.ColumnWidths = "50;50;50;10;"
-    TableManager.setTablePosition
+    TableManager.initialize
     
     Dim スタッフ As Staff
     Dim record(4) As String

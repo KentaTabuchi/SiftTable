@@ -27,12 +27,14 @@ Private Sub setSubMenu(ParamArray menuNames())
         End With
     Next
 End Sub
-
+'データベースから各スタッフの基本シフトを吸い上げエクセルシートへ転記する
 Private Sub 基本シフト()
     Dim スタッフ As Staff
     Dim 進捗状況 As String
     Dim スタッフ総数 As Integer
     Dim count As Integer: count = 0
+    
+    TableManager.initialize
     スタッフ総数 = TableManager.スタッフリスト.count
     ProgressForm.Show vbModeless
     進捗状況 = count & "/" & スタッフ総数 & "人　完了"
@@ -70,6 +72,7 @@ Private Sub 労働時間()
     Dim 進捗状況 As String
     Dim スタッフ総数 As Integer
     Dim count As Integer: count = 0
+    TableManager.initialize
     スタッフ総数 = TableManager.スタッフリスト.count
     ProgressForm.Show vbModeless
     進捗状況 = count & "/" & スタッフ総数 & "人　完了"
@@ -92,18 +95,21 @@ Private Sub 労働時間()
 End Sub
 Private Sub 公休週休()
     Dim スタッフ As Staff
+    TableManager.initialize
     For Each スタッフ In TableManager.スタッフリスト
         Call WorkSheetWriter.WriteNumOfPublicHoliday(スタッフ)
     Next
 End Sub
+'土日に色を塗る
 Private Sub 色セット()
-    '土日に色を塗る
-    'Call WorkSheetPainter.SetWeekendColor
+
     Dim スタッフ As Staff
+    TableManager.initialize
     For Each スタッフ In TableManager.スタッフリスト
     Call WorkSheetPainter.SetWeekendColorUnit(スタッフ)
     Call WorkSheetPainter.ToDarkenOutOfTheCurrentMonth(スタッフ)
     Next
+    
 End Sub
 '全員の出勤不可日に色を塗る
 Private Sub 出勤不可日()
@@ -112,6 +118,7 @@ Private Sub 出勤不可日()
     Dim count As Integer: count = 0
     Dim スタッフ As Staff
     
+    TableManager.initialize
     スタッフ総数 = TableManager.スタッフリスト.count
     ProgressForm.Show vbModeless
     進捗状況 = count & "/" & スタッフ総数 & "人　完了"
@@ -141,7 +148,7 @@ Private Sub 予定セット()
     Call WorkSheetWriter.WriteMeetingDay(TableManager.会議等)
 End Sub
 Private Sub 交互に背景塗る()
-    
+    TableManager.initialize
     Dim スタッフ As Staff
     For Each スタッフ In TableManager.スタッフリスト
         Call WorkSheetPainter.paintBackColorInTurn(スタッフ)
