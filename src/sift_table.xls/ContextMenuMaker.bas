@@ -41,7 +41,13 @@ Private Sub 基本シフト()
     ProgressForm.ProgressLabel.Caption = 進捗状況
     
     For Each スタッフ In TableManager.スタッフリスト
-
+        
+        If ProgressForm.IsCancel = True Then
+            Unload ProgressForm
+            MsgBox "処理を中断しました。"
+            End
+        End If
+        
         count = count + 1
             If スタッフ.名前 = "" Then
                 進捗状況 = "スタッフ不在、スキップします・・・" & vbNewLine & count & "/" & スタッフ総数 & "人　完了"
@@ -80,6 +86,12 @@ Private Sub 労働時間()
     
     For Each スタッフ In TableManager.スタッフリスト
 
+        If ProgressForm.IsCancel = True Then
+            Unload ProgressForm
+            MsgBox "処理を中断しました。"
+            End
+        End If
+        
         count = count + 1
             If スタッフ.名前 = "" Then
                 進捗状況 = "スタッフ不在、スキップします・・・" & vbNewLine & count & "/" & スタッフ総数 & "人　完了"
@@ -124,6 +136,12 @@ Private Sub 出勤不可日()
     進捗状況 = count & "/" & スタッフ総数 & "人　完了"
     ProgressForm.ProgressLabel.Caption = 進捗状況
     For Each スタッフ In TableManager.スタッフリスト
+        
+            If ProgressForm.IsCancel = True Then
+            Unload ProgressForm
+            MsgBox "処理を中断しました。"
+            End
+        End If
         
         count = count + 1
         If スタッフ.名前 = "" Then
