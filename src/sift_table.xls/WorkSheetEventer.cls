@@ -31,8 +31,8 @@ Private Sub workSheetEventer_SheetChange(ByVal sh As Object, ByVal Target As Ran
         preparedApplication
     End If
 End Sub
-'スタッフクラスなどの初期化を行っている｡はじめにこれを動かさないとほとんどのクラスがNULLpointerExceptionになる
+'初期化処理
 Private Sub preparedApplication()
-    On Error Resume Next
     TableManager.initialize
+    ContextMenuMaker.makeContextMenu
 End Sub

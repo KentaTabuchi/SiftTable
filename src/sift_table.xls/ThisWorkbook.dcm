@@ -12,6 +12,7 @@ Dim sheetEventer As New workSheetEventer
 'ワークシートのイベントをフックするクラスにをセット
 Private Sub Workbook_Open()
     Set sheetEventer.workSheetEventer = Application
+
 End Sub
 'イベントフックをはずす
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
