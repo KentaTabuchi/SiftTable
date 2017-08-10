@@ -263,9 +263,34 @@ Public Property Get 前月シフト() As Collection
     Next i
     Exit Property
 catch:
-   Debug.Print "シートが存在しません"
+   Debug.Print "前月シートが存在しません"
 End Property
-
+'TimeCard型のリストを格納したコレクション
+Public Property Get 次月シフト() As Collection
+    On Error GoTo catch:
+    Set 次月シフト = New Collection
+    Dim 当月シート As Worksheet
+    Dim 次月シート As Worksheet
+    Set 当月シート = ThisWorkbook.ActiveSheet
+    Set 次月シート = Worksheets(CheckUtil.NextSheetName(当月シート.name))
+    Dim rg As Range
+    Dim 次月行 As Integer
+    
+    次月行 = 次月シート.Range("B:B").Find(Me.名前).row
+    Set rg = 次月シート.Cells(次月行, 列.開始日)
+    Dim i As Integer
+    For i = 列.開始日 To 列.最終日
+        Dim 単日シフト As TimeCard
+        Set 単日シフト = New TimeCard
+        単日シフト.日付 = 次月シート.Cells(行.日付行, i).Value
+        単日シフト.出勤時間 = 次月シート.Cells(次月行, i).Value
+        単日シフト.退勤時間 = 次月シート.Cells(次月行 + 1, i).Value
+        次月シフト.Add 単日シフト
+    Next i
+    Exit Property
+catch:
+   Debug.Print "次月シートが存在しないか該当する人がいません"
+End Property
 '引数に渡された日付の出退勤時間を返す
 Public Function getShift(日付_ As Date) As TimeCard
     Dim card As TimeCard

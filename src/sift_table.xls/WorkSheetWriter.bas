@@ -17,7 +17,42 @@ End Enum
 Private Enum 行
     日付行 = 4
 End Enum
+'社員締日の列がシートの何列目にあるかを検索して返す
+Private Property Get 社員締日列() As Integer
 
+    Dim rg As Range
+    Dim targetDay As Date
+    Dim i As Integer
+    Application.ScreenUpdating = False
+    
+    For i = 列.開始列 To 列.最終列
+        targetDay = Cells(行.日付行, i)
+        If Day(targetDay) = 10 Then
+            社員締日列 = i
+        End If
+    Next i
+    Application.ScreenUpdating = True
+   
+End Property
+'バイト締日の列がシートの何列目にあるかを検索して返す
+Private Property Get バイト締日列() As Integer
+
+    Dim rg As Range
+    Dim targetDay As Date
+    Dim i As Integer
+    Application.ScreenUpdating = False
+    
+    For i = 列.開始列 To 列.最終列
+        targetDay = Cells(行.日付行, i)
+        
+        If Day(targetDay) = 15 Then
+            バイト締日列 = i
+        End If
+    
+    Next i
+    Application.ScreenUpdating = True
+
+End Property
 '引数に渡された出退勤時間をアクティブセルに記入する
 Public Sub WriteTimeCard(card As TimeCard)
     If card.出勤時間 = "クリア" Then
@@ -37,10 +72,19 @@ Public Sub WriteBasicShift(スタッフ As Staff)
 
     If スタッフ.名前 = "" Then  '名前列が空欄の場合はその行のシフト欄を空にする
         Dim j As Integer
-        For j = 列.月初 To 列.最終列
-            Cells(スタッフ.row, j).Value = ""
-            Cells(スタッフ.row + 1, j).Value = ""
-        Next j
+        
+        Select Case スタッフ.職位
+            Case True '社員の場合
+                For j = 列.開始列 To 社員締日列
+                Cells(スタッフ.row, j).Value = ""
+                Cells(スタッフ.row + 1, j).Value = ""
+                Next j
+            Case False 'バイトの場合
+                For j = 列.月初 To バイト締日列
+                Cells(スタッフ.row, j).Value = ""
+                Cells(スタッフ.row + 1, j).Value = ""
+                Next j
+        End Select
     ElseIf スタッフ.名前 = "不足" Then
         'この条件では何もしないのでこの行は空欄で合っている
     Else
@@ -93,7 +137,7 @@ Public Sub WriteBasicShift(スタッフ As Staff)
     Application.ScreenUpdating = True
     End If
 End Sub
-'引数に渡されたスタッフの前月とかぶる１１日から１５日までを前月のシートからコピーする
+'引数に渡されたスタッフの前月とかぶる部分を前月のシートからコピーする
 Public Sub CopyFromPreviousMonth(スタッフ As Staff)
     If スタッフ.名前 = "" Then
     Else
@@ -105,6 +149,35 @@ Public Sub CopyFromPreviousMonth(スタッフ As Staff)
         targetDay = Cells(行.日付行, i)
         Dim card As TimeCard
         For Each card In スタッフ.前月シフト
+        If card.日付 = targetDay Then
+            Cells(スタッフ.row, i).Value = card.出勤時間
+            Cells(スタッフ.row + 1, i).Value = card.退勤時間
+        End If
+        Next
+    Next i
+    Application.ScreenUpdating = True
+    End If
+End Sub
+'[開発中]引数に渡されたスタッフの次月とかぶる部分を次月のシートからコピーする
+'締日の列を計算で算出する必要がある。プロパティの新設が必要
+Public Sub CopyFromNextMonth(スタッフ As Staff)
+    If スタッフ.名前 = "" Then
+    Else
+    Dim rg As Range
+    Dim targetDay As Date
+    Dim i As Integer
+    Application.ScreenUpdating = False
+    
+    Dim 締日 As Integer
+        If スタッフ.職位 = True Then
+            締日 = 社員締日列
+        ElseIf スタッフ.職位 = False Then
+            締日 = バイト締日列
+        End If
+    For i = 締日 + 1 To 列.最終列
+        targetDay = Cells(行.日付行, i)
+        Dim card As TimeCard
+        For Each card In スタッフ.次月シフト
         If card.日付 = targetDay Then
             Cells(スタッフ.row, i).Value = card.出勤時間
             Cells(スタッフ.row + 1, i).Value = card.退勤時間

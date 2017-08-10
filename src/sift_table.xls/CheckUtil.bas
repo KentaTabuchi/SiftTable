@@ -28,5 +28,18 @@ Public Function PreviousSheetName(currentSheetName As String) As String
         currentSheetName = Int(currentSheetName) - 1
     End If
     currentSheetName = str(currentSheetName) & "月"
+    Debug.Print currentSheetName
     PreviousSheetName = Trim(currentSheetName)
+End Function
+'当月のシート名から次月のシートの名前を整形して返す
+Public Function NextSheetName(currentSheetName As String) As String
+    currentSheetName = Val(currentSheetName)
+    If currentSheetName = 12 Then
+        currentSheetName = 1
+    Else
+        currentSheetName = Int(currentSheetName) + 1
+    End If
+    currentSheetName = str(currentSheetName) & "月"
+    Debug.Print currentSheetName
+    NextSheetName = Trim(currentSheetName)
 End Function

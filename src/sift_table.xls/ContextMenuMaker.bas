@@ -60,6 +60,7 @@ Private Sub 基本シフト()
         DoEvents 'Wait処理？これを書かないと絵画処理が追い付かず何も見えないままプログレス表示が終わってしまう
         Call WorkSheetWriter.WriteBasicShift(スタッフ)
         Call WorkSheetWriter.CopyFromPreviousMonth(スタッフ)
+        Call WorkSheetWriter.CopyFromNextMonth(スタッフ)
     Next
     Unload ProgressForm
 End Sub
