@@ -137,6 +137,92 @@ Public Sub WriteBasicShift(スタッフ As Staff)
     Application.ScreenUpdating = True
     End If
 End Sub
+'引数に渡されたスタッフの基本シフトを期間を指定して転記
+Public Sub WriteBasicShiftByTurn(スタッフ As Staff, 開始日 As Date, 最終日 As Date)
+
+    If スタッフ.名前 = "" Then  '名前列が空欄の場合はその行のシフト欄を空にする
+        Dim j As Integer
+        
+        Select Case スタッフ.職位
+            Case True '社員の場合
+                For j = 列.開始列 To 社員締日列
+                Cells(スタッフ.row, j).Value = ""
+                Cells(スタッフ.row + 1, j).Value = ""
+                Next j
+            Case False 'バイトの場合
+                For j = 列.月初 To バイト締日列
+                Cells(スタッフ.row, j).Value = ""
+                Cells(スタッフ.row + 1, j).Value = ""
+                Next j
+        End Select
+    ElseIf スタッフ.名前 = "不足" Then
+        'この条件では何もしないのでこの行は空欄で合っている
+    Else
+    
+    Dim currentDay As String '検索範囲の日付を順次代入
+    Dim 開始日列 As Integer
+    Dim 最終日列 As Integer
+    Dim column As Integer
+    
+    Dim 月曜日 As TimeCard
+    Dim 火曜日 As TimeCard
+    Dim 水曜日 As TimeCard
+    Dim 木曜日 As TimeCard
+    Dim 金曜日 As TimeCard
+    Dim 土曜日 As TimeCard
+    Dim 日曜日 As TimeCard
+    On Error Resume Next
+    Set 月曜日 = スタッフ.基本シフト.Item("月曜日")
+    Set 火曜日 = スタッフ.基本シフト.Item("火曜日")
+    Set 水曜日 = スタッフ.基本シフト.Item("水曜日")
+    Set 木曜日 = スタッフ.基本シフト.Item("木曜日")
+    Set 金曜日 = スタッフ.基本シフト.Item("金曜日")
+    Set 土曜日 = スタッフ.基本シフト.Item("土曜日")
+    Set 日曜日 = スタッフ.基本シフト.Item("日曜日")
+    
+    '開始日と最終日が表の何列目にあるのか検索する
+    Dim k
+    For k = 列.月初 To 列.最終列
+        currentDay = DateValue(Cells(行.日付行, k).Value)
+        If 開始日 = CDate(currentDay) Then
+            開始日列 = k
+        End If
+        If 最終日 = CDate(currentDay) Then
+            最終日列 = k
+        End If
+    Next k
+    
+    Application.ScreenUpdating = False
+        Dim i As Integer
+        For i = 開始日列 To 最終日列
+            currentDay = DateValue(Cells(行.日付行, i).Value)
+                Select Case Weekday(currentDay)
+                Case vbSunday
+                    Cells(スタッフ.row, i).Value = 日曜日.出勤時間
+                    Cells(スタッフ.row + 1, i).Value = 日曜日.退勤時間
+                Case vbMonday
+                    Cells(スタッフ.row, i).Value = 月曜日.出勤時間
+                    Cells(スタッフ.row + 1, i).Value = 月曜日.退勤時間
+                Case vbTuesday
+                    Cells(スタッフ.row, i).Value = 火曜日.出勤時間
+                    Cells(スタッフ.row + 1, i).Value = 火曜日.退勤時間
+                Case vbWednesday
+                    Cells(スタッフ.row, i).Value = 水曜日.出勤時間
+                    Cells(スタッフ.row + 1, i).Value = 水曜日.退勤時間
+                Case vbThursday
+                    Cells(スタッフ.row, i).Value = 木曜日.出勤時間
+                    Cells(スタッフ.row + 1, i).Value = 木曜日.退勤時間
+                Case vbFriday
+                    Cells(スタッフ.row, i).Value = 金曜日.出勤時間
+                    Cells(スタッフ.row + 1, i).Value = 金曜日.退勤時間
+                Case vbSaturday
+                    Cells(スタッフ.row, i).Value = 土曜日.出勤時間
+                    Cells(スタッフ.row + 1, i).Value = 土曜日.退勤時間
+        End Select
+        Next i
+    Application.ScreenUpdating = True
+    End If
+End Sub
 '引数に渡されたスタッフの前月とかぶる部分を前月のシートからコピーする
 Public Sub CopyFromPreviousMonth(スタッフ As Staff)
     If スタッフ.名前 = "" Then
