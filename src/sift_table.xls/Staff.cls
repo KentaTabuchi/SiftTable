@@ -76,14 +76,14 @@ Application.ScreenUpdating = False
         DoEvents
             Select Case EˆÊ
             Case EˆÊ‹æ•ª.³Ğˆõ
-                If Day(card.“ú•t) = 10 Then
+                If DAY(card.“ú•t) = 10 Then
                     cnt = cnt + 1
                 End If
                 If cnt = 0 Then
                     ŒŠÔ˜J“­ŠÔ = ŒŠÔ˜J“­ŠÔ + card.˜J“­ŠÔ
                 End If
             Case EˆÊ‹æ•ª.ƒoƒCƒg
-                If Day(card.“ú•t) = 15 Then
+                If DAY(card.“ú•t) = 15 Then
                     cnt = cnt + 1
                 End If
                 If cnt = 1 Then
@@ -123,7 +123,7 @@ Public Property Get Œö‹x‰ñ”() As Integer
     Dim card As TimeCard
     Œö‹x‰ñ” = 0
     For Each card In Me.ŒŠÔƒVƒtƒg
-        If Day(card.“ú•t) = 10 Then
+        If DAY(card.“ú•t) = 10 Then
             isClosingDay = True
         End If
         If card.o‹ÎŠÔ = "Œö‹x" And isClosingDay = False Then
@@ -136,7 +136,7 @@ Public Property Get T‹x‰ñ”() As Integer
     Dim card As TimeCard
     T‹x‰ñ” = 0
     For Each card In Me.ŒŠÔƒVƒtƒg
-        If Day(card.“ú•t) = 10 Then
+        If DAY(card.“ú•t) = 10 Then
             isClosingDay = True
         End If
         If card.o‹ÎŠÔ = "T‹x" And isClosingDay = False Then

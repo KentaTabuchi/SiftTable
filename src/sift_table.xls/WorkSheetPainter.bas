@@ -118,7 +118,7 @@ Public Sub ToDarkenOutOfTheCurrentMonth(スタッフ As Staff)
 
     If スタッフ.職位 = True Then
         For i = 列.開始日 To 列.最終日
-        日 = Day(Cells(行.日付, i))
+        日 = DAY(Cells(行.日付, i))
         If 日 = 11 Then
             カウントフラグ = カウントフラグ + 1
         End If
@@ -131,7 +131,7 @@ Public Sub ToDarkenOutOfTheCurrentMonth(スタッフ As Staff)
 
     If スタッフ.職位 = False Then
         For i = 列.開始日 To 列.最終日
-        日 = Day(Cells(行.日付, i))
+        日 = DAY(Cells(行.日付, i))
         If 日 = 16 Then
             カウントフラグ = カウントフラグ + 1
         End If

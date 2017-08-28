@@ -16,7 +16,7 @@ Public Function GetGivenPublicHolidays(日付 As Date) As Byte
     Dim 年 As Integer
     Dim 月 As Integer
     年 = Year(日付)
-    月 = Month(日付)
+    月 = month(日付)
     DatabaseIO.DBConnect
     DatabaseIO.OpenAdo ("SELECT * FROM 公週休回数 WHERE 年度 = " & 年 & "AND  月度 = " & 月)
     On Error Resume Next
@@ -29,7 +29,7 @@ Public Function GetGivenWeeklyHolidays(日付 As Date) As Byte
     Dim 年 As Integer
     Dim 月 As Integer
     年 = Year(日付)
-    月 = Month(日付)
+    月 = month(日付)
     DatabaseIO.DBConnect
     DatabaseIO.OpenAdo ("SELECT * FROM 公週休回数 WHERE 年度 = " & 年 & "AND  月度 = " & 月)
     On Error Resume Next

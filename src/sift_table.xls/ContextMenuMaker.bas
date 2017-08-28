@@ -12,7 +12,7 @@ Public Sub makeContextMenu()
     Set Menu_親メニュー = Application.CommandBars("cell").Controls.Add(Type:=msoControlPopup)
     Menu_親メニュー.Caption = "シフト表"
     Dim menuItems As Collection
-    Call setSubMenu("基本シフト", "基本シフト_領域指定", "希望シフト", "給与計算", "労働時間", "公休週休", "色セット", "出勤不可日", "罫線修正", "予定セット", "交互に背景塗る")
+    Call setSubMenu("基本シフト", "基本シフト_領域指定", "希望シフト", "給与計算", "労働時間", "公休週休", "色セット", "出勤不可日", "罫線修正", "予定セット", "交互に背景塗る", "新規シートを追加")
 End Sub
 'サブメニューの作成
 Private Sub setSubMenu(ParamArray menuNames())
@@ -110,11 +110,39 @@ Private Sub 労働時間()
     
 End Sub
 Private Sub 公休週休()
+
     Dim スタッフ As Staff
+    Dim 進捗状況 As String
+    Dim スタッフ総数 As Integer
+    Dim count As Integer: count = 0
     TableManager.initialize
+    スタッフ総数 = TableManager.スタッフリスト.count
+    ProgressForm.Show vbModeless
+    進捗状況 = count & "/" & スタッフ総数 & "人　完了"
+    ProgressForm.ProgressLabel.Caption = 進捗状況
+    
     For Each スタッフ In TableManager.スタッフリスト
+
+        If ProgressForm.IsCancel = True Then
+            Unload ProgressForm
+            MsgBox "処理を中断しました。"
+            End
+        End If
+        
+        count = count + 1
+            If スタッフ.名前 = "" Then
+                進捗状況 = "スタッフ不在、スキップします・・・" & vbNewLine & count & "/" & スタッフ総数 & "人　完了"
+            Else
+                進捗状況 = スタッフ.名前 & "の公休週休を計算中・・・" & vbNewLine & count & "/" & スタッフ総数 & "人　完了"
+            End If
+        ProgressForm.ProgressLabel.Caption = 進捗状況
+        DoEvents
         Call WorkSheetWriter.WriteNumOfPublicHoliday(スタッフ)
     Next
+    Unload ProgressForm
+       
+    
+    
 End Sub
 '土日に色を塗る
 Private Sub 色セット()
@@ -175,4 +203,7 @@ Private Sub 交互に背景塗る()
     For Each スタッフ In TableManager.スタッフリスト
         Call WorkSheetPainter.paintBackColorInTurn(スタッフ)
     Next
+End Sub
+Private Sub 新規シートを追加()
+    Call NewSheetBuilder.setNewSheet
 End Sub

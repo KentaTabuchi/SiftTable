@@ -122,7 +122,7 @@ Private Sub ruleLineToStaffPane(スタッフ As Staff)
     Dim 対象セル As Range
     Dim 日 As Integer
     For i = 列.開始日 To 列.最終日
-        日 = Day(Cells(行.日付, i))
+        日 = DAY(Cells(行.日付, i))
         Set 対象セル = Range(Cells(スタッフ.row, i), Cells(スタッフ.row + 1, i))
         対象セル.Borders.LineStyle = xlContinuous '上下左右に細実線を引く
         対象セル.Borders(xlInsideHorizontal).LineStyle = xlDash '真ん中の横線に破線を引く

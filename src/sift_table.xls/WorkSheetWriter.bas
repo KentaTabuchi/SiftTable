@@ -27,7 +27,7 @@ Private Property Get 社員締日列() As Integer
     
     For i = 列.開始列 To 列.最終列
         targetDay = Cells(行.日付行, i)
-        If Day(targetDay) = 10 Then
+        If DAY(targetDay) = 10 Then
             社員締日列 = i
         End If
     Next i
@@ -45,7 +45,7 @@ Private Property Get バイト締日列() As Integer
     For i = 列.開始列 To 列.最終列
         targetDay = Cells(行.日付行, i)
         
-        If Day(targetDay) = 15 Then
+        If DAY(targetDay) = 15 Then
             バイト締日列 = i
         End If
     
@@ -319,7 +319,14 @@ Public Sub WriteNumOfPublicHoliday(スタッフ As Staff)
 
     Dim rules As CampanyRules
     Set rules = New CampanyRules
-    Dim 日付 As Date: 日付 = Cells(2, 2)
+    Dim date_ As Date
+    date_ = Cells(2, 2)
+    
+    If month(date_) = 12 Then
+        date_ = DateSerial(Year(date_) + 1, 1, DAY(date_))
+    Else
+        date_ = DateSerial(Year(date_), month(date_) + 1, DAY(date_))
+    End If
     Dim 所定公休 As Byte
     Dim 所定週休 As Byte
     Select Case スタッフ.職位
@@ -327,8 +334,8 @@ Public Sub WriteNumOfPublicHoliday(スタッフ As Staff)
         所定公休 = 0
         所定週休 = 0
     Case True
-    所定公休 = rules.GetGivenPublicHolidays(Date)
-    所定週休 = rules.GetGivenWeeklyHolidays(Date)
+    所定公休 = rules.GetGivenPublicHolidays(date_)
+    所定週休 = rules.GetGivenWeeklyHolidays(date_)
     End Select
     
     Cells(スタッフ.row, 列.公休列).Value = スタッフ.公休回数
