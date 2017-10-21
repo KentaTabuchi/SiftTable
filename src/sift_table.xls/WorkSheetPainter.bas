@@ -25,6 +25,8 @@ Public Sub paintImpossibleDay(スタッフ As Staff)
     If スタッフ.名前 = "" Then
         'この場合何もしない
     Else
+    
+    Dim progress As Single
         For i = 列.開始日 To 列.最終日
             currentDay = DateValue(Cells(行.日付, i).Value)
             Dim 出勤不可日 As Variant
@@ -34,6 +36,8 @@ Public Sub paintImpossibleDay(スタッフ As Staff)
                         Selection.Interior.Color = vbBlack
                     End If
                 Next
+            progress = (i - 列.開始日) / (列.最終日 - 列.開始日)
+            ProgressForm.updateProgressBar (progress)
         Next i
     End If
     Application.ScreenUpdating = True

@@ -12,7 +12,7 @@ Public Sub makeContextMenu()
     Set Menu_親メニュー = Application.CommandBars("cell").Controls.Add(Type:=msoControlPopup)
     Menu_親メニュー.Caption = "シフト表"
     Dim menuItems As Collection
-    Call setSubMenu("基本シフト", "基本シフト_領域指定", "希望シフト", "給与計算", "労働時間", "公休週休", "色セット", "出勤不可日", "罫線修正", "予定セット", "交互に背景塗る", "新規シートを追加")
+    Call setSubMenu("入力ボタン", "基本シフト", "基本シフト_領域指定", "希望シフト", "給与計算", "労働時間", "公休週休", "色セット", "出勤不可日", "罫線修正", "予定セット", "交互に背景塗る", "新規シートを追加")
 End Sub
 'サブメニューの作成
 Private Sub setSubMenu(ParamArray menuNames())
@@ -26,6 +26,9 @@ Private Sub setSubMenu(ParamArray menuNames())
             .onAction = menuName
         End With
     Next
+End Sub
+Private Sub 入力ボタン()
+    FormMaker.make_form
 End Sub
 'データベースから各スタッフの基本シフトを吸い上げエクセルシートへ転記する
 Private Sub 基本シフト()

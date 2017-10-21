@@ -11,7 +11,7 @@ Private Const LEFT_SPACE = 1
 Private Const DAY_ROW = 2
 Private Const NAME_COLUMN = 2
 Private Const LEFT_EDGE_OF_SHIFT = 3
-Private Const RGHIT_EDGE_OF_SHIFT = 39
+Private Const RIGHT_EDGE_OF_SHIFT = 39
 Private Const WORK_TIME_COLUMN = 40
 Private Const HOLIDAY_COUNT_COLUMN = 41
 
@@ -39,11 +39,13 @@ Private Sub main(year_, month_ As Integer)
     Call WorkSheetRuler.ruleLine
     Call margeNameColumnCells
     Call adjustColumnWidth
+    Call adjustRowHight
     Call setColumnTitleText
     Call setTextFont
     Call setDateText
     Call setTextFormat
     Call setAlignment
+    Call setBold
 End Sub
 
 '引数に渡された月の名前に「月」をつけてシート名にし作成する
@@ -89,6 +91,7 @@ Private Sub margeNameColumnCells()
     Next i
         Set rg = Range(Cells(2, 4), Cells(2, 6))
         rg.MergeCells = True
+        rg.HorizontalAlignment = xlLeft
     
     Application.DisplayAlerts = True
     
@@ -98,7 +101,7 @@ Private Sub adjustColumnWidth()
     Dim rg As Range
     Set rg = Range(Cells(1, LEFT_SPACE), Cells(1, LEFT_SPACE))
     rg.ColumnWidth = 1
-    Set rg = Range(Cells(1, LEFT_EDGE_OF_SHIFT), Cells(1, RGHIT_EDGE_OF_SHIFT))
+    Set rg = Range(Cells(1, LEFT_EDGE_OF_SHIFT), Cells(1, RIGHT_EDGE_OF_SHIFT))
     rg.ColumnWidth = 3.38
     Set rg = Range(Cells(1, NAME_COLUMN), Cells(1, NAME_COLUMN))
     rg.ColumnWidth = 8
@@ -106,6 +109,11 @@ Private Sub adjustColumnWidth()
     rg.ColumnWidth = 6.88
     Set rg = Range(Cells(1, HOLIDAY_COUNT_COLUMN), Cells(1, HOLIDAY_COUNT_COLUMN + 1))
     rg.ColumnWidth = 3.13
+End Sub
+Private Sub adjustRowHight()
+    Dim rg As Range
+    Set rg = Range(Cells(6, 1), Cells(41, 1))
+    rg.RowHeight = 9.75
 End Sub
 'テキストをシートに直接代入
 Private Sub setColumnTitleText()
@@ -119,6 +127,7 @@ Private Sub setColumnTitleText()
     Cells(8, HOLIDAY_COUNT_COLUMN + 1) = "取得"
     Cells(9, HOLIDAY_COUNT_COLUMN + 1) = "所定"
     Cells(1, 3) = "月度"
+    Cells(2, 3) = "～"
 End Sub
    '月日、曜日の行に日付を書き込む処理。
 Private Sub setDateText()
@@ -131,7 +140,7 @@ Private Sub setDateText()
     '２列目から最後まで繰り返し
     Dim i As Integer
     Dim rg As Range
-    For i = LEFT_EDGE_OF_SHIFT + 1 To RGHIT_EDGE_OF_SHIFT
+    For i = LEFT_EDGE_OF_SHIFT + 1 To RIGHT_EDGE_OF_SHIFT
         Set rg = Range(Cells(3, i), Cells(3, i))
         rg.FormulaR1C1 = "=MONTH(R[1]C)"
         Set rg = Range(Cells(4, i), Cells(4, i))
@@ -166,7 +175,7 @@ Private Sub setTextFont()
     
     Range(Cells(1, 2), Cells(1, 3)).Font.Size = 15
     
-    Range(Cells(3, LEFT_EDGE_OF_SHIFT), Cells(41, RGHIT_EDGE_OF_SHIFT)).Font.Size = 9
+    Range(Cells(3, LEFT_EDGE_OF_SHIFT), Cells(41, RIGHT_EDGE_OF_SHIFT)).Font.Size = 9
  
 End Sub
 
@@ -174,7 +183,7 @@ Private Sub setTextFormat()
 '日付行の表示形式の設定
     Dim i As Integer
     Dim rg As Range
-    For i = LEFT_EDGE_OF_SHIFT To RGHIT_EDGE_OF_SHIFT
+    For i = LEFT_EDGE_OF_SHIFT To RIGHT_EDGE_OF_SHIFT
         Set rg = Range(Cells(3, i), Cells(3, i))
         rg.NumberFormatLocal = "###.#""月"""
         Set rg = Range(Cells(4, i), Cells(4, i))
@@ -188,9 +197,13 @@ Private Sub setAlignment()
     Dim i As Integer
     Dim rg As Range
     For i = 10 To 40 Step 2
-        Set rg = Range(Cells(i, LEFT_EDGE_OF_SHIFT), Cells(i, RGHIT_EDGE_OF_SHIFT))
+        Set rg = Range(Cells(i, LEFT_EDGE_OF_SHIFT), Cells(i, RIGHT_EDGE_OF_SHIFT))
         rg.HorizontalAlignment = xlLeft
     Next i
+End Sub
+
+Private Sub setBold()
+    Range(Cells(10, LEFT_EDGE_OF_SHIFT), Cells(41, RIGHT_EDGE_OF_SHIFT)).Font.Bold = True
 End Sub
    
     
